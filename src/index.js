@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const { Client, GatewayIntentBits, Collection } = require("discord.js");
 const commandHandler = require("./handlers/commandHandler");
+const eventHandler = require("./handlers/eventHandler");
 
 const client = new Client({
   intents: [
@@ -14,6 +15,7 @@ const client = new Client({
 client.commands = new Collection();
 
 commandHandler(client);
+eventHandler(client);
 
 client.once("ready", () => {
   console.log(`🟢 Logged in as ${client.user.tag}`);
