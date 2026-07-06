@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const logger = require("../utils/logger");
 
 module.exports = (client) => {
   const eventsPath = path.join(__dirname, "../events");
@@ -22,7 +23,7 @@ module.exports = (client) => {
         client.on(event.name, (...args) => event.execute(...args));
       }
 
-      console.log(`Loaded event: ${event.name}`);
+      logger.info(`Loaded event: ${event.name}`);
     }
   }
 };

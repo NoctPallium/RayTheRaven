@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const logger = require("../utils/logger");
 
 module.exports = (client) => {
   client.commands = new Map();
@@ -24,7 +25,7 @@ module.exports = (client) => {
 
       client.commands.set(command.data.name, command);
 
-      console.log(`Loaded command: ${command.data.name}`);
+      logger.info(`Loaded command: ${command.data.name}`);
     }
   }
 };
