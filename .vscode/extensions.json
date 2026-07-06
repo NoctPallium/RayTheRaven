@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "gruntfuggly.todo-tree",
+    "mhutchie.git-graph",
+    "mikestead.dotenv",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "pkief.material-icon-theme"
+  ]
+}

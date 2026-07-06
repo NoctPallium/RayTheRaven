@@ -1,0 +1,25 @@
+{
+  "name": "raytheraven",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@discordjs/rest": "^2.6.1",
+    "discord-api-types": "^0.38.49",
+    "discord.js": "^14.26.4"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "eslint": "^10.6.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.4"
+  }
+}

@@ -1,0 +1,19 @@
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+
+    "eslint.validate": [
+        "javascript"
+    ],
+
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true
+    }
+}
