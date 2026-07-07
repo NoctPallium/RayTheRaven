@@ -6,29 +6,69 @@ const path = require("path");
 
 const commands = [];
 
-const commandsPath = path.join(__dirname, "commands");
+// ==========================================
+// Global Commands
+// ==========================================
 
-const commandFolders = fs.readdirSync(commandsPath);
+const globalCommandsPath = path.join(__dirname, "../src/commands");
 
-for (const folder of commandFolders) {
-  const folderPath = path.join(commandsPath, folder);
+if (fs.existsSync(globalCommandsPath)) {
+  const folders = fs.readdirSync(globalCommandsPath);
 
-  const commandFiles = fs
-    .readdirSync(folderPath)
-    .filter((file) => file.endsWith(".js"));
+  for (const folder of folders) {
+    const folderPath = path.join(globalCommandsPath, folder);
 
-  for (const file of commandFiles) {
-    const command = require(path.join(folderPath, file));
+    if (!fs.statSync(folderPath).isDirectory()) continue;
 
-    commands.push(command.data.toJSON());
+    const commandFiles = fs
+      .readdirSync(folderPath)
+      .filter((file) => file.endsWith(".js"));
+
+    for (const file of commandFiles) {
+      const command = require(path.join(folderPath, file));
+      commands.push(command.data.toJSON());
+
+      console.log(`Loaded global command: ${command.data.name}`);
+    }
   }
 }
+
+// ==========================================
+// Feature Commands
+// ==========================================
+
+const featuresPath = path.join(__dirname, "../src/features");
+
+if (fs.existsSync(featuresPath)) {
+  const features = fs.readdirSync(featuresPath);
+
+  for (const feature of features) {
+    const commandsPath = path.join(featuresPath, feature, "commands");
+
+    if (!fs.existsSync(commandsPath)) continue;
+
+    const commandFiles = fs
+      .readdirSync(commandsPath)
+      .filter((file) => file.endsWith(".js"));
+
+    for (const file of commandFiles) {
+      const command = require(path.join(commandsPath, file));
+      commands.push(command.data.toJSON());
+
+      console.log(`Loaded feature command: ${command.data.name}`);
+    }
+  }
+}
+
+// ==========================================
+// Register Commands
+// ==========================================
 
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
   try {
-    console.log(`Refreshing ${commands.length} commands...`);
+    console.log(`\n🚀 Registering ${commands.length} command(s)...`);
 
     await rest.put(
       Routes.applicationGuildCommands(
@@ -40,7 +80,7 @@ const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
       },
     );
 
-    console.log("✅ Commands registered!");
+    console.log("✅ Commands registered successfully!");
   } catch (error) {
     console.error(error);
   }
