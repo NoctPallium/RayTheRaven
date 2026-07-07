@@ -1,19 +1,27 @@
 {
   "name": "raytheraven",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A modular Discord bot for creators and communities.",
+  "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "deploy": "node src/deploy-commands.js"
+    "deploy": "node scripts/deploy-commands.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "discord",
+    "discord-bot",
+    "creator",
+    "twitch",
+    "youtube"
+  ],
+  "author": "Zach Bencivenga",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "@discordjs/rest": "^2.6.1",
+    "@napi-rs/canvas": "^1.0.2",
+    "canvas": "^3.2.3",
     "discord-api-types": "^0.38.49",
     "discord.js": "^14.26.4"
   },
@@ -22,5 +30,8 @@
     "eslint": "^10.6.0",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.4"
+  },
+  "allowScripts": {
+    "canvas@3.2.3": true
   }
 }
