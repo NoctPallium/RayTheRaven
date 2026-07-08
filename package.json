@@ -1,5 +1,5 @@
 {
-  "name": "raytheraven",
+  "name": "RayTheRaven",
   "version": "1.0.0",
   "description": "A modular Discord bot for creators and communities.",
   "main": "src/index.js",
@@ -24,7 +24,8 @@
     "canvas": "^3.2.3",
     "discord-api-types": "^0.38.49",
     "discord.js": "^14.26.4",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "^6.0.1",
+    "ws": "^8.21.0"
   },
   "devDependencies": {
     "dotenv": "^17.4.2",

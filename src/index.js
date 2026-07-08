@@ -8,6 +8,9 @@ const commandHandler = require("./core/handlers/commandHandler");
 const eventHandler = require("./core/handlers/eventHandler");
 const logger = require("./core/utils/logger");
 
+const { startTwitchTask } = require("./features/twitch/tasks/twitchTask");
+const { startYouTubeTask } = require("./features/youtube/tasks/youtubeTask");
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -19,14 +22,17 @@ const client = new Client({
 
 client.commands = new Collection();
 
-// Load handlers
 commandHandler(client);
 eventHandler(client);
 
-// Ready event
-client.once("ready", () => {
+client.once("clientReady", () => {
   logger.info(`🟢 Logged in as ${client.user.tag}`);
+
+  startTwitchTask(client);
+  logger.info("🟣 Twitch monitoring started.");
+
+  startYouTubeTask(client);
+  logger.info("🔴 YouTube monitoring started.");
 });
 
-// Login
 client.login(process.env.DISCORD_TOKEN);
