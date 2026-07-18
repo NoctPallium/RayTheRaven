@@ -1,7 +1,7 @@
 module.exports = {
   rows: {
-    startY: 335,
-    gap: 81,
+    startY: 305,
+    gap: 74,
   },
 
   left: {
@@ -9,6 +9,7 @@ module.exports = {
     xpBarWidth: 355,
     xpBarHeight: 8,
     xpBarRadius: 4,
+    xpBarOffsetY: 20,
   },
 
   right: {
@@ -21,13 +22,7 @@ module.exports = {
   avatar: {
     radius: 28,
   },
-  left: {
-    xpBarX: 335,
-    xpBarWidth: 355,
-    xpBarHeight: 8,
-    xpBarRadius: 4,
-    xpBarOffsetY: -10,
-  },
+
   username: {
     maxWidth: 390,
   },

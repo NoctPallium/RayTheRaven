@@ -16,31 +16,45 @@ async function generateLeaderboard(client, leaderboard) {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
+  // =====================================
+  // Background
+  // =====================================
+
   const background = await loadImage(assets.leaderboardBackground);
+
   ctx.drawImage(background, 0, 0, width, height);
+
+  // =====================================
+  // Leaderboard Rows
+  // =====================================
 
   let currentY = layout.rows.startY;
 
-  for (let i = 0; i < leaderboard.length; i++) {
+  for (let i = 0; i < leaderboard.length && i < 10; i++) {
     const user = leaderboard[i];
 
     let discordUser;
 
     try {
       discordUser = await client.users.fetch(user.user_id);
-    } catch {
+    } catch (error) {
+      console.error(`Failed to fetch leaderboard user ${user.user_id}:`, error);
+
       currentY += layout.rows.gap;
       continue;
     }
-    // ==========================
-    // Left XP Bar
-    // ==========================
+
+    // =====================================
+    // XP Bar
+    // =====================================
 
     const requiredXP = getRequiredXP(user.level);
-    const progress = Math.min(user.xp / requiredXP, 1);
+    const progress =
+      requiredXP > 0 ? Math.min(Math.max(user.xp / requiredXP, 0), 1) : 0;
 
     const xpBarY = currentY + layout.left.xpBarOffsetY;
 
+    // Empty bar
     ctx.beginPath();
     ctx.roundRect(
       layout.left.xpBarX,
@@ -49,27 +63,37 @@ async function generateLeaderboard(client, leaderboard) {
       layout.left.xpBarHeight,
       layout.left.xpBarRadius,
     );
+
     ctx.fillStyle = "#1E1E1E";
     ctx.fill();
 
-    ctx.beginPath();
-    ctx.roundRect(
-      layout.left.xpBarX,
-      xpBarY,
-      layout.left.xpBarWidth * progress,
-      layout.left.xpBarHeight,
-      layout.left.xpBarRadius,
-    );
-    ctx.fillStyle = "#9757FF";
-    ctx.shadowColor = "#9757FF";
-    ctx.shadowBlur = 12;
-    ctx.fill();
+    // Filled portion
+    if (progress > 0) {
+      const progressWidth = Math.max(
+        layout.left.xpBarHeight,
+        layout.left.xpBarWidth * progress,
+      );
 
-    ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.roundRect(
+        layout.left.xpBarX,
+        xpBarY,
+        progressWidth,
+        layout.left.xpBarHeight,
+        layout.left.xpBarRadius,
+      );
 
-    // ==========================
-    // Avatar on Right Panel
-    // ==========================
+      ctx.fillStyle = "#9757FF";
+      ctx.shadowColor = "#9757FF";
+      ctx.shadowBlur = 12;
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+    }
+
+    // =====================================
+    // Avatar
+    // =====================================
 
     const avatar = await loadImage(
       discordUser.displayAvatarURL({
@@ -88,6 +112,7 @@ async function generateLeaderboard(client, leaderboard) {
       0,
       Math.PI * 2,
     );
+
     ctx.closePath();
     ctx.clip();
 
@@ -101,7 +126,10 @@ async function generateLeaderboard(client, leaderboard) {
 
     ctx.restore();
 
-    // Avatar ring
+    // =====================================
+    // Avatar Ring
+    // =====================================
+
     ctx.beginPath();
     ctx.arc(
       layout.right.avatarX,
@@ -110,42 +138,43 @@ async function generateLeaderboard(client, leaderboard) {
       0,
       Math.PI * 2,
     );
+
     ctx.strokeStyle = "#9757FF";
     ctx.lineWidth = 3;
     ctx.shadowColor = "#9757FF";
     ctx.shadowBlur = 12;
     ctx.stroke();
+
     ctx.shadowBlur = 0;
 
-    // ==========================
-    // Username on Right Panel
-    // ==========================
+    // =====================================
+    // Username
+    // =====================================
 
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "#FFFFFF";
 
-    let username = discordUser.username;
     let usernameFontSize = 42;
 
     do {
       ctx.font = `bold ${usernameFontSize}px Poppins`;
       usernameFontSize--;
     } while (
-      ctx.measureText(username).width > layout.username.maxWidth &&
+      ctx.measureText(discordUser.username).width > layout.username.maxWidth &&
       usernameFontSize > 24
     );
 
     ctx.shadowColor = "#8B5CF6";
     ctx.shadowBlur = 14;
 
-    ctx.fillText(username, layout.right.usernameX, currentY - 8);
+    ctx.fillText(discordUser.username, layout.right.usernameX, currentY - 8);
 
     ctx.shadowBlur = 0;
 
-    // ==========================
+    // =====================================
     // Level
-    // ==========================
+    // =====================================
 
     ctx.textAlign = "center";
     ctx.fillStyle = "#CFAEFF";
@@ -153,9 +182,9 @@ async function generateLeaderboard(client, leaderboard) {
 
     ctx.fillText(`LVL ${user.level}`, layout.right.levelX, currentY - 10);
 
-    // ==========================
+    // =====================================
     // XP
-    // ==========================
+    // =====================================
 
     ctx.fillStyle = "#FFFFFF";
     ctx.font = "24px Poppins";
@@ -165,11 +194,15 @@ async function generateLeaderboard(client, leaderboard) {
     currentY += layout.rows.gap;
   }
 
-  const output = path.join(assets.outputFolder, "leaderboard.png");
+  // =====================================
+  // Save
+  // =====================================
 
-  fs.writeFileSync(output, canvas.toBuffer("image/png"));
+  const outputPath = path.join(assets.outputFolder, "leaderboard.png");
 
-  return output;
+  fs.writeFileSync(outputPath, canvas.toBuffer("image/png"));
+
+  return outputPath;
 }
 
 module.exports = generateLeaderboard;
