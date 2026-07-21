@@ -6,6 +6,8 @@ const {
   StringSelectMenuBuilder,
 } = require("discord.js");
 
+const Categories = require("../../../constants/categories");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("panel")
@@ -14,6 +16,16 @@ module.exports = {
       sub.setName("tickets").setDescription("Create the ticket panel."),
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+  category: Categories.ADMIN,
+
+  description: "Creates one of Ray's interactive server panels.",
+
+  usage: "/panel tickets",
+
+  permissions: ["Administrator"],
+
+  cooldown: 5,
 
   async execute(interaction) {
     if (interaction.options.getSubcommand() !== "tickets") return;

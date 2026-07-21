@@ -1,6 +1,6 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
-
+const healthStatus = require("../utils/healthStatus");
 const dbPath = path.join(__dirname, "../../../ray.db");
 
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -303,6 +303,10 @@ function setState(key, value) {
 }
 module.exports = {
   db,
+
+  // Application State
+  getState,
+  setState,
 
   // Levels
   getLevel,

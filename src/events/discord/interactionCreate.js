@@ -3,47 +3,44 @@ const ticketInteraction = require("../../features/tickets/events/ticketInteracti
 const ticketButtons = require("../../features/tickets/events/ticketButtons");
 
 const roleButtons = require("../../features/reactionRoles/handlers/buttonHandler");
+const helpButtons = require("../../features/help/handlers/helpButtons");
+const communityRoleMenus = require("../../features/communityHub/handlers/communityRoleMenus");
 
 module.exports = {
   name: "interactionCreate",
 
   async execute(interaction) {
     try {
-      // ==========================================
-      // Slash Commands
-      // ==========================================
+      if (interaction.isAutocomplete()) {
+        const command = interaction.client.commands.get(interaction.commandName);
+        if (!command?.autocomplete) return;
+        return await command.autocomplete(interaction);
+      }
 
       if (interaction.isChatInputCommand()) {
-        const command = interaction.client.commands.get(
-          interaction.commandName,
-        );
+        const command = interaction.client.commands.get(interaction.commandName);
 
         if (!command) {
-          console.error(
-            `No command matching ${interaction.commandName} was found.`,
-          );
+          console.error(`No command matching ${interaction.commandName} was found.`);
           return;
         }
 
         return await command.execute(interaction);
       }
 
-      // ==========================================
-      // Buttons
-      // ==========================================
-
       if (interaction.isButton()) {
-        // Setup Buttons
+        if (interaction.customId.startsWith("help_")) {
+          return await helpButtons(interaction);
+        }
+
         if (interaction.customId.startsWith("setup_")) {
           return await setupService.handleButton(interaction);
         }
 
-        // Ticket Buttons
         if (interaction.customId.startsWith("ticket_")) {
           return await ticketButtons.handleButton(interaction);
         }
 
-        // Notification Role Buttons
         if (interaction.customId.startsWith("role_")) {
           return await roleButtons(interaction);
         }
@@ -51,27 +48,19 @@ module.exports = {
         return;
       }
 
-      // ==========================================
-      // Channel Select Menus
-      // ==========================================
-
       if (interaction.isChannelSelectMenu()) {
         return await setupService.handleChannelSelect(interaction);
       }
-
-      // ==========================================
-      // Role Select Menus
-      // ==========================================
 
       if (interaction.isRoleSelectMenu()) {
         return await setupService.handleRoleSelect(interaction);
       }
 
-      // ==========================================
-      // String Select Menus
-      // ==========================================
-
       if (interaction.isStringSelectMenu()) {
+        if (interaction.customId.startsWith("community_")) {
+          return await communityRoleMenus(interaction);
+        }
+
         return await ticketInteraction.handleStringSelect(interaction);
       }
     } catch (error) {

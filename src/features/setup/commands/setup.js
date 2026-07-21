@@ -4,12 +4,26 @@ const {
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
+  PermissionFlagsBits,
 } = require("discord.js");
+
+const Categories = require("../../../constants/categories");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("setup")
-    .setDescription("Configure Ray for this server."),
+    .setDescription("Configure Ray for this server.")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+  category: Categories.ADMIN,
+
+  description: "Opens Ray's server configuration hub.",
+
+  usage: "/setup",
+
+  permissions: ["Administrator"],
+
+  cooldown: 5,
 
   async execute(interaction) {
     const embed = new EmbedBuilder()

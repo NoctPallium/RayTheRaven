@@ -1,5 +1,5 @@
 const { createCanvas } = require("canvas");
-const colors = require("../config/colors");
+const colors = require("../../../core/config/colors");
 
 function createCard(width = 1200, height = 630) {
   const canvas = createCanvas(width, height);

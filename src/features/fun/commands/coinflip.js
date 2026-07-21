@@ -1,0 +1,2 @@
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js"); const Categories=require("../../../constants/categories");
+module.exports={data:new SlashCommandBuilder().setName("coinflip").setDescription("Flip a coin."),category:Categories.FUN,description:"Flips a coin and returns heads or tails.",usage:"/coinflip",permissions:[],cooldown:2,async execute(i){const result=Math.random()<.5?"Heads":"Tails";await i.reply({embeds:[new EmbedBuilder().setColor("#7C3AED").setTitle("🪙 Coin Flip").setDescription(`**${result}!**`)]});}};

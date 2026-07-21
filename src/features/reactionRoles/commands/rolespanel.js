@@ -9,11 +9,23 @@ const {
 
 const config = require("../config/roleConfig");
 
+const Categories = require("../../../constants/categories");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("rolespanel")
     .setDescription("Post the notification roles panel.")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+
+  category: Categories.ADMIN,
+
+  description: "Posts the server's notification-role panel.",
+
+  usage: "/rolespanel",
+
+  permissions: ["Administrator"],
+
+  cooldown: 5,
 
   async execute(interaction) {
     const embed = new EmbedBuilder()

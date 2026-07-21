@@ -10,6 +10,8 @@ const generateRankCard = require("../rendering/rankGenerator");
 
 const { db } = require("../../../core/database/database");
 
+const Categories = require("../../../constants/categories");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("rank")
@@ -20,6 +22,16 @@ module.exports = {
         .setDescription("View another user's rank.")
         .setRequired(false),
     ),
+
+  category: Categories.COMMUNITY,
+
+  description: "Displays your rank card or another member's rank card.",
+
+  usage: "/rank [user]",
+
+  permissions: [],
+
+  cooldown: 5,
 
   async execute(interaction) {
     const target = interaction.options.getUser("user") ?? interaction.user;

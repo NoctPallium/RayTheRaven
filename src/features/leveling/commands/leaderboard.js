@@ -5,10 +5,22 @@ const fs = require("fs");
 const { fetchLeaderboard } = require("../services/levelingService");
 const generateLeaderboard = require("../rendering/leaderboardGenerator");
 
+const Categories = require("../../../constants/categories");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("View the server's leveling leaderboard."),
+
+  category: Categories.COMMUNITY,
+
+  description: "Displays the server's leveling leaderboard.",
+
+  usage: "/leaderboard",
+
+  permissions: [],
+
+  cooldown: 10,
 
   async execute(interaction) {
     await interaction.deferReply();
